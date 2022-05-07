@@ -11,20 +11,30 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    // Add new rules here
+    // rules for todos
     match /todos/{documents=**} {
+      // allow reading and updating your own todos
       allow read, update: if request.auth != null && request.auth.uid == resource.data.uid;
+
+      // allow any authenticated user to create todos
       allow create: if request.auth != null;
     }
-
+  
+    // rules for users  
     match /users/{documents=**} {
+      // allow updating user profiles if it is their own profile or if they are an admin.
+      // disallow updating admin status
       allow update: if request.auth != null 
       && request.resource.data.isAdmin == resource.data.isAdmin
       && (
         request.auth.uid == resource.data.uid 
         || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true
       );
+
+      // allow authenticated users to create a profile but disallow them to set admin status
       allow create: if request.auth != null && !("isAdmin" in request.resource.data);
+
+      // allow authenticated users to read any profiles
       allow read: if request.auth != null;
     }
   }
