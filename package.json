@@ -5,7 +5,7 @@
   "main": "./src/client/index.js",
   "scripts": {
     "start": "webpack serve --mode development",
-    "emulators": "firebase emulators:start --project demo-codebusters --import=mock-data --export-on-exit",
+    "emulators": "firebase emulators:start --project fir-codebusters-7ad88 --import=mock-data --export-on-exit",
     "build": "webpack --mode production",
     "test": "mocha --exit"
   },
